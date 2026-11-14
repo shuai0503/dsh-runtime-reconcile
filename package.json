@@ -1,6 +1,6 @@
 {
   "name": "dsh-runtime-reconcile",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A read-only agent tool that reconciles what a DeepSeek Harness profile declares against what is actually registered in the live runtime.",
   "license": "MIT",
   "type": "module",
@@ -25,17 +25,24 @@
   "author": "shuai0503",
   "exports": {
     ".": "./index.js",
+    "./core": "./core.js",
     "./locale/*.json": "./locale/*.json",
     "./icon": "./icon.svg"
   },
   "files": [
     "index.js",
+    "core.js",
+    "test/selftest.mjs",
     "cordis.patch.yml",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE",
     "locale/*.json",
     "icon.svg"
   ],
+  "scripts": {
+    "test": "node test/selftest.mjs"
+  },
   "dsh": {
     "bundle": { "patch": "./cordis.patch.yml" }
   },

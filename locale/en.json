@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "Runtime reconcile",
-    "description": "A read-only agent tool that reconciles what the profile declares against what is actually registered in the live runtime: configured-but-unregistered web providers, disabled bundles, tool occupancy and missing services. No files, no network, no config changes."
+    "description": "A read-only agent tool that reconciles what the profile declares against what is actually registered in the live runtime, with root-cause correlation and actionable remedies. No files, no network, no config changes."
   }
 }

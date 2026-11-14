@@ -46,13 +46,15 @@ Ecosystem scale of the underlying problem is documented in [deepseek-harness dis
 
 | Group | Live source | Detects |
 |---|---|---|
-| `providers` | `ctx.web.config`, `searchProviders` / `fetchProviders` maps, `DSH_WEB_SEARCH_PROVIDER` / `DSH_WEB_FETCH_PROVIDER` | configured-but-unregistered provider, no provider, ambiguous providers |
-| `bundles` | `pluginManager.listBundles()` | installed-but-disabled bundles (the usual root cause) |
-| `rows` | `pluginManager.listPlugins()` | disabled Loader rows, active / total counts |
-| `tools` | `tools.definitions()` | visible tool count, duplicate / shadowed names |
+| `providers` | `ctx.web.config`, `searchProviders` / `fetchProviders` maps, `DSH_WEB_SEARCH_PROVIDER` / `DSH_WEB_FETCH_PROVIDER` | configured-but-unregistered, registered-but-unavailable, no provider, ambiguous providers |
+| `bundles` | `pluginManager.listBundles()` | installed-but-disabled bundles, **correlated as the likely root cause** of a provider error |
+| `rows` | `pluginManager.listPlugins()` | **enabled-but-not-active** Loader rows, disabled rows, active / total counts |
+| `tools` | `tools.definitions()` | visible tool count, tools without an `output` renderer, listing cap |
 | `services` | `ctx.get()` on core seams | missing optional services |
 
-Findings carry `severity`, `code`, `title`, `detail` and structured `evidence`. They are **observations, not a security verdict**.
+Findings carry `severity`, `code`, `title`, `detail`, structured `evidence` and an actionable **`remedy`**. They are **observations, not a security verdict**.
+
+A check group that cannot run (missing service, throwing enumeration) is recorded in `completeness.unavailable` and forces `ok: false` / `complete: false` — an unreadable registry is never reported as a clean bill of health. An invalid `focus` is rejected rather than silently yielding an empty OK report.
 
 ---
 
@@ -61,7 +63,7 @@ Findings carry `severity`, `code`, `title`, `detail` and structured `evidence`. 
 GitHub source (recommended — pin a commit or tag):
 
 ```bash
-dsh plugin --profile web add github:shuai0503/dsh-runtime-reconcile#v0.1.0
+dsh plugin --profile web add github:shuai0503/dsh-runtime-reconcile#v0.2.0
 ```
 
 Or from npm (after you publish, see below):
@@ -97,30 +99,37 @@ reconcile_runtime { "focus": "all", "maxTools": 200 }
 ### Example output
 
 ```
-Runtime reconcile — 1 error(s), 0 warning(s), 4 info
-focus=all  generatedAt=2026-11-14T09:35:06.996Z
+Runtime reconcile — 1 error(s), 1 warning(s), 4 info
+focus=all  complete=true  generatedAt=2026-11-14T09:35:06.996Z
 
 web.search: configured=modsearch registered=[deepseek-official, web-search-free]
-web.fetch:  configured=fs-quality-fetch registered=[fs-quality-fetch, http]
+web.fetch : configured=fs-quality-fetch registered=[fs-quality-fetch, http]
 bundles: 3/4 enabled; disabled=[@liustack/modsearch]
-loader rows: 200/202 active; 2 disabled
-tools: 5 visible; 0 shadowed names
+loader rows: 200/202 active; 2 disabled; 0 enabled-but-not-active
+tools: 5 visible
 
 [ERROR] WEB_SEARCH_PROVIDER_MISSING — Configured search provider "modsearch" is not registered
-  ctx.web.searchProvider points at "modsearch", but the live search provider
-  registry contains [deepseek-official, web-search-free]. Every search call will
-  fail until the provider is enabled or the config points at a registered one.
+  ctx.web.searchProvider points at "modsearch", but the live searchProviders
+  registry contains [deepseek-official, web-search-free]. Every search call fails
+  at provider selection. The bundle "@liustack/modsearch" is installed but
+  disabled — that is the likely cause.
   evidence: {"configuredFrom":"web.searchProvider","configured":"modsearch",
-             "registered":["deepseek-official","web-search-free"]}
-[INFO] BUNDLE_DISABLED — Bundle "@liustack/modsearch" is installed but disabled
+             "registered":["deepseek-official","web-search-free"],
+             "disabledBundle":"@liustack/modsearch"}
+  remedy: Enable bundle "@liustack/modsearch" (or set web.searchProvider to one
+          of: deepseek-official, web-search-free).
+[WARNING] BUNDLE_DISABLED — Bundle "@liustack/modsearch" is installed but disabled
+  This disabled bundle is the likely cause of a provider error above.
+  evidence: {"bundle":"@liustack/modsearch","linkedToProviderError":true}
+[INFO] WEB_FETCH_PROVIDER_OK — fetch provider "fs-quality-fetch" is configured and live
 [INFO] ROWS_DISABLED — 2 of 202 Loader rows are disabled
-[INFO] TOOL_REGISTRY_OK — 5 tools are visible with no duplicate names
+[INFO] TOOL_REGISTRY_OK — 5 tools are visible in the global scope
 [INFO] SERVICES_OK — 7 core services are live
 
 Read-only live inspection. No files, no network, no config changes.
 ```
 
-That error/bundle pair is the whole diagnosis: the config names a provider whose bundle never mounted. This tool reports it; it deliberately does **not** edit your `cordis.patch.yml`.
+The error/bundle pair is the whole diagnosis, and the `remedy` line is the next action. This tool deliberately does **not** edit your `cordis.patch.yml`.
 
 ---
 
@@ -151,6 +160,16 @@ If the `tools` seam is absent the plugin still mounts and the `services` check r
 
 ---
 
+## Development
+
+```
+npm test          # 14 pure-core checks, no Harness runtime needed
+```
+
+`core.js` holds all inspection logic and depends on nothing — `collect()` takes a context-like object, so `test/selftest.mjs` drives it with a faithful mock of the live services. `index.js` only wires the tool. This split keeps the diagnosis testable without booting a profile.
+
+---
+
 ## Privacy and trust
 
 The tool reads service objects already present in the Harness process. It does not read your files, inspect personal browser profiles, read credentials, contact any host, or transmit anything. Its entire output is a JSON report rendered into the current conversation. The one environment value it consults is `DSH_WEB_SEARCH_PROVIDER` / `DSH_WEB_FETCH_PROVIDER` (a provider id, not a secret) because the web seam itself honours those overrides.
@@ -161,7 +180,8 @@ The tool reads service objects already present in the Harness process. It does n
 
 - It **diagnoses, does not repair**. Fixing a misconfigured provider means editing the profile patch or enabling the bundle, which is a user decision.
 - Checks are best-effort and defensive: a changed internal service shape degrades into a warning rather than a crash. If a future DSH renames `searchProviders`, the provider check reports the seam as unavailable instead of guessing.
-- Tool-name "duplicates" are reported as info/warning, not errors: scoped shadowing is intentional in the Harness.
+- Duplicate visible tool names are **not** detected, by design: `tools.definitions()` is the already-resolved visible set (a Map keyed by name), so duplicates cannot appear. Scoped shadowing is resolved by the registry itself. Declaring otherwise would be a check that can never fire.
+- The disabled-bundle correlation is heuristic string matching (package name ↔ provider id). It is a strong hint, not proof of ownership.
 - Findings describe state at call time. Re-run after enabling/disabling bundles or changing config.
 
 ---
@@ -170,7 +190,7 @@ The tool reads service objects already present in the Harness process. It does n
 
 Source: [github.com/shuai0503/dsh-runtime-reconcile](https://github.com/shuai0503/dsh-runtime-reconcile). Issues and pull requests are welcome.
 
-The `v0.1.0` tag makes the GitHub install command above resolve. If the package is also published to npm, `dsh plugin --profile web add dsh-runtime-reconcile` works without a build step.
+The `v0.2.0` tag makes the GitHub install command above resolve. If the package is also published to npm, `dsh plugin --profile web add dsh-runtime-reconcile` works without a build step. See [CHANGELOG.md](CHANGELOG.md) for the 0.1.0 → 0.2.0 changes.
 
 ---
 
