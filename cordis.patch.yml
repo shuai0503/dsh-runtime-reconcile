@@ -1,0 +1,10 @@
+# One Host-only row. No row-level inject: the plugin must always mount so it can
+# *report* a missing service rather than silently not activating. index.js uses
+# ctx.inject(['tools'], ...) for the one capability its tool registration truly
+# needs, and ctx.get() defensively for everything else.
+#
+# The row id is namespaced to the package to avoid the entry-id collisions
+# measured in deepseek-harness discussion #4253 (452 colliding entry ids).
+- insert:
+    - id: dsh-runtime-reconcile
+      name: dsh-runtime-reconcile
