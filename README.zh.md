@@ -2,9 +2,14 @@
 
 > 一个**只读**的 Agent 工具：把「DeepSeek Harness profile 声明了什么」与「活体运行时里真正注册了什么」做对账。
 
+[![npm version](https://img.shields.io/npm/v/dsh-runtime-reconcile.svg)](https://www.npmjs.com/package/dsh-runtime-reconcile)
+[![npm downloads](https://img.shields.io/npm/dm/dsh-runtime-reconcile.svg)](https://www.npmjs.com/package/dsh-runtime-reconcile)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![dsh-plugin](https://img.shields.io/badge/dsh-plugin-2ea44f.svg)](https://github.com/topics/dsh-plugin)
 
 [English](README.md) · 中文
+
+**30 秒上手**：`dsh plugin --profile web add dsh-runtime-reconcile` → 新开一个会话 → 对 Agent 说 `reconcile_runtime`。它会告诉你某次工具调用**为什么**失败、该启用哪个 bundle。
 
 静态扫描器看到的是一份语法合法的配置。这个工具看到的是**正在运行的进程**。它能回答那些扫描器回答不了的问题：
 
@@ -62,13 +67,19 @@ configured web provider "modsearch" is not registered
 
 ## 安装
 
+一条命令，无需构建、零依赖、运行时不联网：
+
+```bash
+dsh plugin --profile web add dsh-runtime-reconcile
+```
+
 GitHub 源（推荐，固定到 tag 或 commit）：
 
 ```bash
-dsh plugin --profile web add github:shuai0503/dsh-runtime-reconcile#v0.2.0
+dsh plugin --profile web add github:shuai0503/dsh-runtime-reconcile#v0.2.1
 ```
 
-npm：
+npm（同上，免构建）：
 
 ```bash
 dsh plugin --profile web add dsh-runtime-reconcile
@@ -190,7 +201,7 @@ npm test          # 14 项纯 core 检查，不需要 Harness 运行时
 
 ## 仓库
 
-源码：[github.com/shuai0503/dsh-runtime-reconcile](https://github.com/shuai0503/dsh-runtime-reconcile)，欢迎 issue 与 PR。`v0.2.0` tag 让上面的 GitHub 安装命令可解析。本包同时也发布在 npm 上，所以 `dsh plugin --profile web add dsh-runtime-reconcile` 无需任何构建步骤即可使用。0.1.0 → 0.2.0 的变化见 [CHANGELOG.md](CHANGELOG.md)。
+源码：[github.com/shuai0503/dsh-runtime-reconcile](https://github.com/shuai0503/dsh-runtime-reconcile)，欢迎 issue 与 PR。`v0.2.1` tag 让上面的 GitHub 安装命令可解析。本包同时也发布在 npm 上，所以 `dsh plugin --profile web add dsh-runtime-reconcile` 无需任何构建步骤即可使用。0.1.0 → 0.2.1 的变化见 [CHANGELOG.md](CHANGELOG.md)。
 
 ---
 

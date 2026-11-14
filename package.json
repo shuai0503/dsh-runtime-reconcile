@@ -1,7 +1,9 @@
 {
   "name": "dsh-runtime-reconcile",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A read-only agent tool that reconciles what a DeepSeek Harness profile declares against what is actually registered in the live runtime.",
+  "displayName": "Runtime Reconcile",
+  "icon": "icon.svg",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -11,8 +13,14 @@
     "cordis",
     "diagnostics",
     "runtime",
+    "runtime-reconciliation",
     "plugin-conflict",
-    "observability"
+    "plugin-diagnostics",
+    "observability",
+    "profile-health",
+    "ssrf-prevention",
+    "tool-registry",
+    "agent-tools"
   ],
   "repository": {
     "type": "git",

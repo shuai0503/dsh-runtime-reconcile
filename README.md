@@ -2,9 +2,14 @@
 
 > A read-only agent tool that reconciles **what your DeepSeek Harness profile declares** against **what is actually registered in the live runtime**.
 
+[![npm version](https://img.shields.io/npm/v/dsh-runtime-reconcile.svg)](https://www.npmjs.com/package/dsh-runtime-reconcile)
+[![npm downloads](https://img.shields.io/npm/dm/dsh-runtime-reconcile.svg)](https://www.npmjs.com/package/dsh-runtime-reconcile)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![dsh-plugin](https://img.shields.io/badge/dsh-plugin-2ea44f.svg)](https://github.com/topics/dsh-plugin)
 
 English · [中文](README.zh.md)
+
+**30-second start:** `dsh plugin --profile web add dsh-runtime-reconcile` → start a new session → ask your agent `reconcile_runtime`. It will tell you *why* a tool is failing and what to enable.
 
 Static source scanners see a valid config. This tool sees the running process. It answers questions those scanners cannot:
 
@@ -62,10 +67,16 @@ A check group that cannot run (missing service, throwing enumeration) is recorde
 
 ## Install
 
-GitHub source (recommended — pin a commit or tag):
+One command, no build step, zero dependencies, no network access at runtime:
 
 ```bash
-dsh plugin --profile web add github:shuai0503/dsh-runtime-reconcile#v0.2.0
+dsh plugin --profile web add dsh-runtime-reconcile
+```
+
+GitHub source (pin a commit or tag):
+
+```bash
+dsh plugin --profile web add github:shuai0503/dsh-runtime-reconcile#v0.2.1
 ```
 
 From npm (no build step, no dependencies):
@@ -192,7 +203,7 @@ The tool reads service objects already present in the Harness process. It does n
 
 Source: [github.com/shuai0503/dsh-runtime-reconcile](https://github.com/shuai0503/dsh-runtime-reconcile). Issues and pull requests are welcome.
 
-The `v0.2.0` tag makes the GitHub install command above resolve. The package is also published to npm, so `dsh plugin --profile web add dsh-runtime-reconcile` works without a build step. See [CHANGELOG.md](CHANGELOG.md) for the 0.1.0 → 0.2.0 changes.
+The `v0.2.1` tag makes the GitHub install command above resolve. The package is also published to npm, so `dsh plugin --profile web add dsh-runtime-reconcile` works without a build step. See [CHANGELOG.md](CHANGELOG.md) for the 0.1.0 → 0.2.1 changes.
 
 ---
 

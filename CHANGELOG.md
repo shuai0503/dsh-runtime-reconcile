@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.1
+
+Discoverability and metadata only — no behavior changes, no new permissions, still zero I/O.
+
+- Package metadata: `displayName`, `icon`, expanded `keywords` (npm search), `homepage`.
+- README (EN/ZH): npm/version/download badges, a 30-second quick-start, and a one-command install up top.
+- GitHub repository: shorter searchable `description`, npm `homepage`, and expanded `topics` for ecosystem discovery.
+- Runtime-reported version in `core.js` synced to 0.2.1.
+
 ## 0.2.0
 
 Diagnosis quality and engineering hardening. No new permissions, no new dependencies, still zero I/O.

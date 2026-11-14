@@ -349,7 +349,7 @@ export async function collect(ctx, options = {}) {
     complete: !incomplete,
     focus,
     generatedAt: new Date().toISOString(),
-    version: '0.2.0',
+    version: '0.2.1',
     summary,
     completeness,
     findings,
