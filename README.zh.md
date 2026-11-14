@@ -190,7 +190,7 @@ npm test          # 14 项纯 core 检查，不需要 Harness 运行时
 
 ## 仓库
 
-源码：[github.com/shuai0503/dsh-runtime-reconcile](https://github.com/shuai0503/dsh-runtime-reconcile)，欢迎 issue 与 PR。`v0.2.0` tag 让上面的 GitHub 安装命令可解析。0.1.0 → 0.2.0 的变化见 [CHANGELOG.md](CHANGELOG.md)。
+源码：[github.com/shuai0503/dsh-runtime-reconcile](https://github.com/shuai0503/dsh-runtime-reconcile)，欢迎 issue 与 PR。`v0.2.0` tag 让上面的 GitHub 安装命令可解析。本包同时也发布在 npm 上，所以 `dsh plugin --profile web add dsh-runtime-reconcile` 无需任何构建步骤即可使用。0.1.0 → 0.2.0 的变化见 [CHANGELOG.md](CHANGELOG.md)。
 
 ---
 

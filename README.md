@@ -68,7 +68,7 @@ GitHub source (recommended — pin a commit or tag):
 dsh plugin --profile web add github:shuai0503/dsh-runtime-reconcile#v0.2.0
 ```
 
-Or from npm (after you publish, see below):
+From npm (no build step, no dependencies):
 
 ```bash
 dsh plugin --profile web add dsh-runtime-reconcile
@@ -192,7 +192,7 @@ The tool reads service objects already present in the Harness process. It does n
 
 Source: [github.com/shuai0503/dsh-runtime-reconcile](https://github.com/shuai0503/dsh-runtime-reconcile). Issues and pull requests are welcome.
 
-The `v0.2.0` tag makes the GitHub install command above resolve. If the package is also published to npm, `dsh plugin --profile web add dsh-runtime-reconcile` works without a build step. See [CHANGELOG.md](CHANGELOG.md) for the 0.1.0 → 0.2.0 changes.
+The `v0.2.0` tag makes the GitHub install command above resolve. The package is also published to npm, so `dsh plugin --profile web add dsh-runtime-reconcile` works without a build step. See [CHANGELOG.md](CHANGELOG.md) for the 0.1.0 → 0.2.0 changes.
 
 ---
 
