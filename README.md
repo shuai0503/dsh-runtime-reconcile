@@ -4,6 +4,8 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
+English · [中文](README.zh.md)
+
 Static source scanners see a valid config. This tool sees the running process. It answers questions those scanners cannot:
 
 - Why does `web_search` say *`configured web provider "modsearch" is not registered`* when the config looks fine?
